@@ -5,8 +5,8 @@ import {
   FileText,
   Layers,
   LayoutDashboard,
-  Logs,
-  UserKey,
+  ScrollText,
+  ShieldCheck,
   Users,
 } from "lucide-react";
 
@@ -24,7 +24,7 @@ export const sidebarItems = [
   {
     label: "Roles & Permissions",
     href: "/dashboard/roles-permissions",
-    icon: UserKey,
+    icon: ShieldCheck,
   },
   {
     label: "Blog",
@@ -51,7 +51,7 @@ export const sidebarItems = [
   {
     label: "Logs",
     href: "/dashboard/logs",
-    icon: Logs,
+    icon: ScrollText,
   },
   {
     label: "Activity",
