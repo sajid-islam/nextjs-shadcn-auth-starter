@@ -14,7 +14,7 @@ const Sidebar = () => {
     <aside className="w-72">
       <div className="flex h-screen flex-col bg-[#F0F4F8]">
         {/* Logo and Title */}
-        <section className="flex items-center gap-4 border-b-2 border-gray-300 px-6 py-4">
+        <section className="flex items-center gap-4 px-6 py-4">
           <span className="bg-primary flex size-12 items-center justify-center rounded-xl p-2">
             <Image
               src="/logo-with-bg.png"
@@ -31,7 +31,7 @@ const Sidebar = () => {
           </div>
         </section>
         {/* Sidebar Menu */}
-        <section className="sidebar-scroller mt-5 flex flex-col gap-4 overflow-y-auto px-6">
+        <section className="sidebar-scroller mt-2 flex flex-col gap-4 overflow-y-auto px-6">
           {sidebarItems.map((sidebarItem) => (
             <SidebarItem
               key={sidebarItem.label}

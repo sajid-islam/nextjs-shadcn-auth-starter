@@ -1,3 +1,4 @@
+import DashboardNav from "@/components/layout/dashboard-nav/DashboardNav";
 import Sidebar from "@/components/layout/sidebar/Sidebar";
 import React from "react";
 
@@ -5,7 +6,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   return (
     <main className="flex h-screen overflow-hidden">
       <Sidebar />
-      <div className="flex-1 overflow-y-auto bg-[#F5F9FD]">{children}</div>
+      <div className="root-scroller flex-1 overflow-y-auto bg-[#F5F9FD]">
+        <DashboardNav />
+        {children}
+      </div>
     </main>
   );
 }

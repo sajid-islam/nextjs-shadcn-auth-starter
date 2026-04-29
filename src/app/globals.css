@@ -143,6 +143,18 @@
   }
 }
 
+.root-scroller::-webkit-scrollbar {
+  width: 8px;
+}
+
+.root-scroller::-webkit-scrollbar-track {
+  background: transparent;
+}
+.root-scroller::-webkit-scrollbar-thumb {
+  background: var(--tertiary);
+  border-radius: 10px;
+}
+
 .sidebar-scroller::-webkit-scrollbar {
   width: 6px;
 }
