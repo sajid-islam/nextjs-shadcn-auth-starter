@@ -8,7 +8,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <Sidebar />
       <div className="root-scroller flex-1 overflow-y-auto bg-[#F5F9FD]">
         <DashboardNav />
-        {children}
+        <div className="p-4">{children}</div>
       </div>
     </main>
   );
