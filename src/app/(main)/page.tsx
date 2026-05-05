@@ -16,7 +16,7 @@ export default function LandingPage() {
       <div className="py-24 sm:py-32 lg:pb-40">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mx-auto max-w-2xl text-center">
-            <h1 className="text-foreground text-4xl font-bold tracking-tight sm:text-6xl">
+            <h1 className="text-foreground font-newsreader text-4xl font-bold tracking-tight sm:text-6xl">
               Next.js & Shadcn Auth Starter
             </h1>
             <p className="text-muted-foreground mt-6 text-lg leading-8">
