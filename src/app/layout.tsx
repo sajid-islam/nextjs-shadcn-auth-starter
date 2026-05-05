@@ -1,3 +1,4 @@
+import Providers from "@/providers/Providers";
 import type { Metadata } from "next";
 import { Manrope, Newsreader } from "next/font/google";
 import "./globals.css";
@@ -31,7 +32,9 @@ export default function RootLayout({
       lang="en"
       className={`${manrope.className} ${newsreader.variable} root-scroller h-full antialiased`}
     >
-      <body className="flex min-h-full flex-col">{children}</body>
+      <body className="flex min-h-full flex-col">
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }
