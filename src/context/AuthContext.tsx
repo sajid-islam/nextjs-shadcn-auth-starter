@@ -3,9 +3,14 @@ import api from "@/lib/axios/axios";
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 
 interface IUser {
-  userId: string;
   name: string;
   email: string;
+  isActive: boolean;
+  provider: "email" | "google" | "github" | string;
+  verified_email: boolean;
+  social_links: [platform: string, link: string];
+  createdAt: string;
+  updatedAt: string;
 }
 
 interface AuthContextType {
