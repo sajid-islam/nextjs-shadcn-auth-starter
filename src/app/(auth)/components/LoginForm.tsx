@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { useAuth } from "@/context/AuthContext";
 import { AlertCircle, Loader2, Lock, Mail } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 
 type LoginState = {
@@ -18,6 +18,8 @@ type LoginState = {
 export function LoginForm() {
   const router = useRouter();
   const { login } = useAuth();
+
+  const searchParams = useSearchParams();
 
   const [form, setForm] = useState<LoginState>({
     email: "",
@@ -40,7 +42,8 @@ export function LoginForm() {
     const result = await login(form.email, form.password);
 
     if (result.success) {
-      router.push("/dashboard");
+      const callbackUrl = searchParams.get("callbackUrl") || "/dashboard";
+      router.push(callbackUrl);
     } else {
       setError(result.message || "Login failed");
     }
