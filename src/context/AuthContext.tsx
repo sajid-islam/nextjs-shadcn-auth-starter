@@ -11,6 +11,10 @@ interface IUser {
   social_links: [platform: string, link: string];
   createdAt: string;
   updatedAt: string;
+  role: string;
+  phone: string;
+  photo_url: string;
+  agreedTerms: boolean;
 }
 
 interface AuthContextType {
@@ -24,6 +28,7 @@ interface AuthContextType {
     confirmPassword: string,
     agreedTerms: boolean
   ) => Promise<{ success: boolean; message?: string }>;
+  logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -87,8 +92,18 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const logout = async () => {
+    try {
+      await api.post("/auth/logout");
+      setUser(null);
+    } catch (error) {
+      console.error("Logout error:", error);
+      setUser(null);
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, isLoading, login, register }}>
+    <AuthContext.Provider value={{ user, isLoading, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   );

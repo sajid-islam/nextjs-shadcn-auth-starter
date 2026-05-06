@@ -1,15 +1,33 @@
 "use client";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { LogOut, Settings, User } from "lucide-react"; // Optional: icons for flair
+import { Skeleton } from "@/components/ui/skeleton";
+import { useAuth } from "@/context/AuthContext";
+import { LogOut, Settings, User } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 const UserMenu = () => {
+  const { user, isLoading, logout } = useAuth();
+  const router = useRouter();
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center gap-2">
+        <Skeleton className="h-12 w-12 rounded-full" />
+      </div>
+    );
+  }
+
+  if (!user) {
+    return null;
+  }
+
   return (
     <Popover>
       <PopoverTrigger asChild>
         <button className="transition-opacity outline-none hover:cursor-pointer hover:opacity-80">
           <Image
-            src="https://api.dicebear.com/9.x/micah/svg?seed=Emery"
+            src={user.photo_url || `https://api.dicebear.com/9.x/micah/svg?seed=${user.name}`}
             alt="user photo"
             width={48}
             height={48}
@@ -23,8 +41,8 @@ const UserMenu = () => {
         <div className="flex flex-col space-y-1">
           {/* User Header */}
           <div className="px-2 py-1.5">
-            <p className="text-sm leading-none font-medium">Emery</p>
-            <p className="text-muted-foreground mt-1 text-xs leading-none">emery@example.com</p>
+            <p className="text-sm leading-none font-medium">{user.name}</p>
+            <p className="text-muted-foreground mt-1 text-xs leading-none">{user.email}</p>
           </div>
 
           <hr className="-mx-2 my-1 border-slate-200" />
@@ -42,7 +60,13 @@ const UserMenu = () => {
 
           <hr className="-mx-2 my-1 border-slate-200" />
 
-          <button className="flex w-full items-center rounded-md px-2 py-1.5 text-sm text-red-600 transition-colors hover:bg-red-50">
+          <button
+            onClick={async () => {
+              await logout();
+              router.push("/sign-in");
+            }}
+            className="flex w-full items-center rounded-md px-2 py-1.5 text-sm text-red-600 transition-colors hover:bg-red-50"
+          >
             <LogOut className="mr-2 h-4 w-4" />
             <span>Log out</span>
           </button>
