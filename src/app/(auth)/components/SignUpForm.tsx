@@ -3,49 +3,61 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import api from "@/lib/axios/axios";
+import { useAuth } from "@/context/AuthContext";
 import { AlertCircle, Loader2, Lock, Mail, User } from "lucide-react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
+type FormState = {
+  name: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  showPassword: boolean;
+  showConfirmPassword: boolean;
+  agreedTerms: boolean;
+};
+
 export function SignUpForm() {
   const router = useRouter();
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [agreeToTerms, setAgreeToTerms] = useState(false);
+  const { register } = useAuth();
+
+  const [form, setForm] = useState<FormState>({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    showPassword: false,
+    showConfirmPassword: false,
+    agreedTerms: false,
+  });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const updateField = (field: keyof FormState, value: string | boolean) => {
+    setForm((prev) => ({ ...prev, [field]: value }));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-
-    if (!agreeToTerms) {
-      setError("Please agree to the terms and conditions");
-      return;
-    }
-
     setLoading(true);
 
-    try {
-      const res = await api.post("/auth/register", { name, email, password, confirmPassword });
+    const result = await register(
+      form.name,
+      form.email,
+      form.password,
+      form.confirmPassword,
+      form.agreedTerms
+    );
 
-      if (!res.data.success) {
-        setError(res.data.message || "Sign up failed");
-        return;
-      }
-
+    if (result.success) {
       router.push("/");
-    } catch (error: any) {
-      setError(error.response?.data.message || "An error occurred. Please try again.");
-    } finally {
-      setLoading(false);
+    } else {
+      setError(result.message || "Sign up failed");
     }
+
+    setLoading(false);
   };
 
   return (
@@ -59,16 +71,15 @@ export function SignUpForm() {
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
+        {/* Name */}
         <div className="space-y-2">
           <Label htmlFor="name">Full Name</Label>
           <div className="relative">
             <User className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
             <Input
               id="name"
-              type="text"
-              placeholder="John Doe"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              value={form.name}
+              onChange={(e) => updateField("name", e.target.value)}
               disabled={loading}
               required
               className="pl-10"
@@ -76,6 +87,7 @@ export function SignUpForm() {
           </div>
         </div>
 
+        {/* Email */}
         <div className="space-y-2">
           <Label htmlFor="signup-email">Email Address</Label>
           <div className="relative">
@@ -83,9 +95,8 @@ export function SignUpForm() {
             <Input
               id="signup-email"
               type="email"
-              placeholder="you@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={form.email}
+              onChange={(e) => updateField("email", e.target.value)}
               disabled={loading}
               required
               className="pl-10"
@@ -93,89 +104,74 @@ export function SignUpForm() {
           </div>
         </div>
 
+        {/* Password */}
         <div className="space-y-2">
-          <Label htmlFor="password">Password</Label>
+          <Label>Password</Label>
           <div className="relative">
             <Lock className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
             <Input
-              id="password"
-              type={showPassword ? "text" : "password"}
-              placeholder="••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              type={form.showPassword ? "text" : "password"}
+              value={form.password}
+              onChange={(e) => updateField("password", e.target.value)}
               disabled={loading}
               required
               className="pr-10 pl-10"
             />
             <button
               type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              disabled={loading}
-              className="text-muted-foreground hover:text-foreground absolute top-1/2 right-3 -translate-y-1/2 disabled:cursor-not-allowed"
+              onClick={() => updateField("showPassword", !form.showPassword)}
+              className="text-muted-foreground absolute top-1/2 right-3 -translate-y-1/2"
             >
-              {showPassword ? "Hide" : "Show"}
+              {form.showPassword ? "Hide" : "Show"}
             </button>
           </div>
         </div>
 
+        {/* Confirm Password */}
         <div className="space-y-2">
-          <Label htmlFor="confirm-password">Confirm Password</Label>
+          <Label>Confirm Password</Label>
           <div className="relative">
             <Lock className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
             <Input
-              id="confirm-password"
-              type={showConfirmPassword ? "text" : "password"}
-              placeholder="••••••••"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
+              type={form.showConfirmPassword ? "text" : "password"}
+              value={form.confirmPassword}
+              onChange={(e) => updateField("confirmPassword", e.target.value)}
               disabled={loading}
               required
               className="pr-10 pl-10"
             />
             <button
               type="button"
-              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-              disabled={loading}
-              className="text-muted-foreground hover:text-foreground absolute top-1/2 right-3 -translate-y-1/2 disabled:cursor-not-allowed"
+              onClick={() => updateField("showConfirmPassword", !form.showConfirmPassword)}
+              className="text-muted-foreground absolute top-1/2 right-3 -translate-y-1/2"
             >
-              {showConfirmPassword ? "Hide" : "Show"}
+              {form.showConfirmPassword ? "Hide" : "Show"}
             </button>
           </div>
         </div>
 
+        {/* Terms */}
         <div className="flex items-start gap-2">
           <input
-            id="terms"
             type="checkbox"
-            checked={agreeToTerms}
-            onChange={(e) => setAgreeToTerms(e.target.checked)}
-            disabled={loading}
-            className="border-input accent-primary mt-1 h-4 w-4 rounded border disabled:cursor-not-allowed disabled:opacity-50"
+            checked={form.agreedTerms}
+            onChange={(e) => updateField("agreedTerms", e.target.checked)}
           />
-          <label htmlFor="terms" className="text-muted-foreground text-sm">
-            I agree to the{" "}
-            <Link href="#" className="text-primary font-semibold hover:underline">
-              Terms of Service
-            </Link>{" "}
-            and{" "}
-            <Link href="#" className="text-primary font-semibold hover:underline">
-              Privacy Policy
-            </Link>
+          <label className="text-muted-foreground text-sm">
+            I agree to the Terms and Privacy Policy
           </label>
         </div>
 
+        {/* Error */}
         {error && (
-          <div className="border-destructive/50 bg-destructive/10 text-destructive flex items-start gap-2 rounded-lg border px-3 py-2 text-sm">
-            <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
-            <p>{error}</p>
+          <div className="text-destructive flex gap-2 text-sm">
+            <AlertCircle className="h-4 w-4" />
+            {error}
           </div>
         )}
 
-        <Button
-          type="submit"
-          disabled={loading}
-          className="h-10 w-full gap-2 rounded-lg font-semibold"
-        >
+        {/* Submit */}
+        <Button disabled={loading} className="w-full">
           {loading ? (
             <>
               <Loader2 className="h-4 w-4 animate-spin" />
@@ -186,13 +182,6 @@ export function SignUpForm() {
           )}
         </Button>
       </form>
-
-      <p className="text-muted-foreground mt-4 text-center text-sm">
-        Already have an account?{" "}
-        <Link href="/sign-in" className="text-primary font-semibold hover:underline">
-          Sign in
-        </Link>
-      </p>
     </section>
   );
 }
