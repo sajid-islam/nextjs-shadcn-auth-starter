@@ -27,7 +27,7 @@ const UserMenu = () => {
       <PopoverTrigger asChild>
         <button className="transition-opacity outline-none hover:cursor-pointer hover:opacity-80">
           <Image
-            src={user.photo_url || `https://api.dicebear.com/9.x/micah/svg?seed=${user.name}`}
+            src={user.photo_url || `https://api.dicebear.com/9.x/initials/svg?seed=${user.name}`}
             alt="user photo"
             width={48}
             height={48}
