@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/context/AuthContext";
 import { AlertCircle, Loader2, Lock, Mail, User } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -79,6 +80,7 @@ export function SignUpForm() {
             <Input
               id="name"
               value={form.name}
+              placeholder="Abdullah"
               onChange={(e) => updateField("name", e.target.value)}
               disabled={loading}
               required
@@ -95,6 +97,7 @@ export function SignUpForm() {
             <Input
               id="signup-email"
               type="email"
+              placeholder="you@example.com"
               value={form.email}
               onChange={(e) => updateField("email", e.target.value)}
               disabled={loading}
@@ -112,6 +115,7 @@ export function SignUpForm() {
             <Input
               type={form.showPassword ? "text" : "password"}
               value={form.password}
+              placeholder="••••••••"
               onChange={(e) => updateField("password", e.target.value)}
               disabled={loading}
               required
@@ -135,6 +139,7 @@ export function SignUpForm() {
             <Input
               type={form.showConfirmPassword ? "text" : "password"}
               value={form.confirmPassword}
+              placeholder="••••••••"
               onChange={(e) => updateField("confirmPassword", e.target.value)}
               disabled={loading}
               required
@@ -182,6 +187,12 @@ export function SignUpForm() {
           )}
         </Button>
       </form>
+      <p className="text-muted-foreground mt-4 text-center text-sm">
+        Already have an account?{" "}
+        <Link href="/sign-in" className="text-primary font-semibold hover:underline">
+          Sign in
+        </Link>
+      </p>
     </section>
   );
 }
